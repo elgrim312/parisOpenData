@@ -20,5 +20,6 @@ class DefaultController extends Controller
                 'browsers' => $browsers,
             ]
         );
+
     }
 }

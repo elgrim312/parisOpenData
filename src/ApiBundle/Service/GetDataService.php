@@ -42,6 +42,6 @@ class GetDataService
             ]
         );
         $request = new Request('GET', $uri);
-        return $client->send($request, ['Content-Type' => 'application/json'])->getBody()->getContents();
+        return \GuzzleHttp\json_decode($client->send($request, ['Content-Type' => 'application/json'])->getBody()->getContents(), true);
     }
 }
