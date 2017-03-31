@@ -12,10 +12,13 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $openData = $this->get('api.service.get_data_service');
-        $res = $openData->RequestOpenData(10, ['os' => 'os']);
-        dump($res);
-        die();
-        return $this->render('ApiBundle:Default:index.html.twig');
+        $parser = $this->get('api.service.parse_data');
+        die(dump($parser->parseBrowsers()));
+        return $this->render(
+            'default/index.html.twig',
+            [
+                'browsers' => $browsers,
+            ]
+        );
     }
 }

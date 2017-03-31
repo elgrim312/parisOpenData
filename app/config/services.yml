@@ -11,3 +11,5 @@ services:
         class: ApiBundle\Service\GetDataService
         calls:
             - [RequestOpenData, ['@?', '@?', '@?']]
+    api.service.parse_data:
+        class: ApiBundle\Service\ParseService

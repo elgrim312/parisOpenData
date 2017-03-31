@@ -36,7 +36,6 @@ class GetDataService
             $refineDate = \DateTime::createFromFormat('Y-m-d', $date);
             $uri .= "&refine.start_time=".$refineDate;
         }
-        dump($uri);
         $client = new Client(
             [
                 'timeout' => 4.0
