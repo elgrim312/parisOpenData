@@ -14,8 +14,6 @@ class DefaultController extends Controller
     {
         $openData = $this->get('api.service.get_data_service');
         $res = $openData->RequestOpenData(10, ['os' => 'os']);
-        dump($res);
-        die();
         return $this->render('ApiBundle:Default:index.html.twig');
     }
 }
