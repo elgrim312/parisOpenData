@@ -1,1 +1,80 @@
-Hello World!
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <center><h1 class="title" style="margin: 15px">Wifi hotspots usage in Paris</h1></center>
+    {% set count = 0 %}
+    <div class="columns is-mobile">
+        {% for dataset, data in datasets %}
+        {% if count % 2 == 0 %}
+    </div>
+    <div class="columns is-mobile">
+        {% endif %}
+        <div class="column">
+            <nav class="panel">
+                <p class="panel-heading">
+                    {{ dataset|capitalize }} shares
+                </p>
+                <div class="panel-block">
+                    <div id="{{ dataset }}Chart"></div>
+                </div>
+            </nav>
+        </div>
+        {% set count = count + 1 %}
+        {% endfor %}
+    </div>
+    <script>
+        // Radialize the colors
+        Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
+            return {
+                radialGradient: {
+                    cx: 0.5,
+                    cy: 0.3,
+                    r: 0.7
+                },
+                stops: [
+                    [0, color],
+                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+                ]
+            };
+        });
+        {% for dataset, data in datasets %}
+        // Build the chart
+        Highcharts.chart('{{ dataset }}Chart', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: ''
+            },
+            tooltip: {
+                pointFormat: 'Share: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        },
+                        connectorColor: 'silver'
+                    }
+                }
+            },
+            series: [{
+                name: 'Browsers',
+                data: [
+                    {% for dat in data %}
+                    {name: '{{ dat.name }}', y: {{ dat.count }} },
+                    {% endfor %}
+                ]
+            }]
+        });
+        {% endfor %}
+    </script>
+{% endblock %}

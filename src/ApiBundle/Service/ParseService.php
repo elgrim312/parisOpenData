@@ -7,47 +7,53 @@
  */
 
 namespace ApiBundle\Service;
+
 use ApiBundle\Service\GetDataService;
 
 class ParseService
 {
-    /**
-     * @param $data
-     * @return array
-     */
-    public function parseBrowsers()
+    public function parseFacet($data, $facetName, $threshold)
     {
-        $dataService = new GetDataService();
-        $data = $dataService->RequestOpenData(1, ['browser']);
+        // Get the specified facet array from the data
+        $facetIndex = 0;
+        $allFacets = $data['facet_groups'];
+        foreach ($allFacets as $index => $value) {
+            if ($value['name'] === $facetName) {
+                $facetIndex = $index;
+            }
+        }
+        $facets = $allFacets[$facetIndex]['facets'];
 
-        $browsers = $data['facet_groups'][0]['facets'];
-
-        // Get the total number of values
+        // Gets the total number of values
         $total = 0;
-        foreach ($browsers as $browser) {
-            $total += $browser['count'];
+        foreach ($facets as $facet) {
+            $total += $facet['count'];
         }
 
-        // Get the main browsers and categorizes the others as 'other'
-        $percentageLimit = $total * 0.02;
-        $filteredBrowsers = [];
-        $filteredBrowsers[] = [
+        // Gets the main oss and categorizes the others as 'other'
+        $limit = $total * $threshold;
+        $filteredResults = [];
+        $filteredResults[] = [
             'name' => 'Others',
             'count' => 0,
         ];
-        foreach ($browsers as $browser) {
-            if ($browser['name'] === 'Other' || $browser['name'] === 'NULL') {
-                $filteredBrowsers[0]['count'] += $browser['count'];
-            } elseif ($browser['count'] >= $percentageLimit) {
-                $filteredBrowsers[] = [
-                    'name' => $browser['name'],
-                    'count' => $browser['count'],
+
+        foreach ($facets as $facet) {
+            if (!empty($filter)) {
+
+            }
+            if ($facet['name'] === 'Other' || $facet['name'] === 'NULL') {
+                $filteredResults[0]['count'] += $facet['count'];
+            } elseif ($facet['count'] >= $limit) {
+                $filteredResults[] = [
+                    'name' => $facet['name'],
+                    'count' => $facet['count'],
                 ];
             } else {
-                $filteredBrowsers[0]['count'] += $browser['count'];
+                $filteredResults[0]['count'] += $facet['count'];
             }
         }
 
-        return $filteredBrowsers;
+        return $filteredResults;
     }
 }
