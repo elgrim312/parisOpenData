@@ -2,6 +2,11 @@
 
 {% block body %}
     <center><h1 class="title" style="margin: 15px">Wifi hotspots usage in Paris</h1></center>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+
     {% set count = 0 %}
     <div class="columns is-mobile">
         {% for dataset, data in datasets %}

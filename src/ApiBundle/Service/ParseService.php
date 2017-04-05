@@ -12,7 +12,7 @@ use ApiBundle\Service\GetDataService;
 
 class ParseService
 {
-    public function parseFacet($data, $facetName, $threshold)
+    public function parseFacet($data, $facetName, $threshold = 0)
     {
         // Get the specified facet array from the data
         $facetIndex = 0;
